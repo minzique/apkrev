@@ -1,14 +1,17 @@
 #!/bin/sh
 
 PACKAGE="$1"
-WORK_DIRECTORY="$HOME/reversing"
+WORK_DIRECTORY="$HOME/tmp/re/apps"
 APK_LOCATION="$WORK_DIRECTORY/apks/$PACKAGE.apk"
-OUTPUT_DIRECTORY="$WORK_DIRECTORY/reversing/$PACKAGE"
+OUTPUT_DIRECTORY="$WORK_DIRECTORY/apks/$PACKAGE"
 COOKIE_JAR="cookies.txt"
+EDITOR="code"
 
 echo "  grabbing download url from apkpure..."
 PAGE_CONTENT="$(curl_chrome101 -s -L --cookie-jar $COOKIE_JAR https://apkpure.com/dl/$PACKAGE/download?from=details)"
+
 DOWNLOAD_URL="$(htmlq --text --attribute href 'a#download_link' <<< "$PAGE_CONTENT")"
+
 TYPE_TAG="$(htmlq --text 'div.info-title span' <<< "$PAGE_CONTENT")"
 
 if [ "$DOWNLOAD_URL" == "" ]; then
@@ -67,5 +70,5 @@ if [ -f "$RN_BUNDLE" ]; then
   fi
 fi
 
-echo "  opening in codium..."
-codium "$OUTPUT_DIRECTORY"
+echo "  opening in editor..."
+$EDITOR "$OUTPUT_DIRECTORY"
